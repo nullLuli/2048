@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!--<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>-->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+		<script type="text/javascript" src="js/Diamond.js"></script>
+		<script type="text/javascript" src="js/MoveDiamond.js"></script>
+		<script type="text/javascript" src="js/UnitTest.js"></script>
+		<title></title>
+		<style type="text/css">
+			.backGroud {
+				background-color: grey;
+				position: relative;
+				height: 200px;
+				width: 200px;
+				margin-left: 50px;
+				margin-top: 50px;
+				border-radius: 5px;
+			}
+			.backGroudCopy {
+				background-color: grey;
+				position: relative;
+				height: 200px;
+				width: 200px;
+				margin-left: 250px;
+				margin-top: 250px;
+				border-radius: 5px;
+			}
+
+			.grid {
+				background-color: gainsboro;
+				height: 40px;
+				width: 40px;
+				border-radius: 5px;
+			}
+			
+			.diamond {
+				position: absolute;
+				height: 40px;
+				width: 40px;
+				border-radius: 5px;
+				color: red;
+			}
+			
+			.clearButtonStyle {
+				position: relative;
+				height: 40px;
+				width: 100px;
+				margin: 10px;
+				background-color: green;
+			}
+		</style>
+	</head>
+
+	<body id="body">
+		<div data-role="page" id="page">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide"> Slide1</div>
+					<div class="swiper-slide"> Slide2</div>
+					<div class="swiper-slide"> Slide3</div>
+				</div>
+			</div>
+			<table id="table" border="1" class="backGroud" cellspacing="3px">
+				<script type="text/javascript">
+					var initTable = function() {
+						console.log("初始化table")
+						for(var i = 0; i < 4; i++) {
+							var createTrString = $("<tr>").attr("id", "tr" + i);
+							$("#table").append(createTrString);
+							for(var j = 0; j < 4; j++) {
+								var createTdString = $("<td>").attr("class", "grid");
+								$("#tr" + i).append(createTdString);
+							}
+						}
+					};
+
+					//					$(document).ready(initTable);
+
+					$(document).on("pagecreate", function() {
+						initTable();
+					});
+				</script>
+			</table>
+			<table id="tableCopy" border="1" class="backGroudCopy" cellspacing="3px">
+				<script type="text/javascript">
+					var initTableCopy = function() {
+						console.log("初始化table")
+						for(var i = 0; i < 4; i++) {
+							var createTrString = $("<tr>").attr("id", "copytr" + i);
+							$("#tableCopy").append(createTrString);
+							for(var j = 0; j < 4; j++) {
+								var createTdString = $("<td>").attr("class", "grid");
+								$("#copytr" + i).append(createTdString);
+							}
+						}
+					};
+
+					//					$(document).ready(initTable);
+
+					$(document).on("pagecreate", function() {
+						initTableCopy();
+					});
+				</script>
+			</table>
+			<div id="clearButton" class="clearButtonStyle">
+			</div>
+			
+			<script>
+				var beginX, beginY, endX, endY, swipeLeft, swipeRight, swipeUp, swipeDown, range = 30;
+				var haveIdentified = false;
+				var page = 0;
+
+				if(typeof SwipeDirection == "undefined") {
+					var SwipeDirection = {
+						SwipeLeft: 0,
+						SwipeRight: 1,
+						SwipeUp: 2,
+						SwipeDown: 3
+					}
+				}
+
+				function debugClick(dirction) {
+					moveDiamonds(dirction,diamondList,function () {
+						console.log("回调执行");
+						initRound();
+						
+						refreshCopyTable();
+					});
+//					test();
+					console.log(event.type);
+					}
+
+					function refreshCopyTable() {
+						//先清空
+						var count = 0;
+						$("div[id^='copydiamond']").each(function() {
+							$(this).remove();
+							count++;
+						});
+						console.log("查找到 "+count+"个对象");
+						//然后生成
+						for(var i in diamondList) {
+							var diamond = diamondList[i];
+							generateCopyDiv(diamond);
+						}
+					}
+
+					document.getElementById("page").addEventListener('touchstart', function(event) {
+					event.stopPropagation();
+					//event.preventDefault();
+					beginX = event.targetTouches[0].screenX;
+					beginY = event.targetTouches[0].screenY;
+					swipeLeft = false, swipeRight = false;
+					swipeDown = false, swipeUp = false;
+					haveIdentified = false;
+				});
+
+				document.getElementById("page").addEventListener('touchmove', function(event) {
+					event.stopPropagation();
+					event.preventDefault();
+					if(!haveIdentified) {
+						endX = event.targetTouches[0].screenX;
+						endY = event.targetTouches[0].screenY;
+						// 左右滑动
+						if(Math.abs(endX - beginX) - Math.abs(endY - beginY) > 0) {
+							/*向右滑动*/
+							if(endX - beginX > range) {
+								swipeRight = true;
+								swipeLeft = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeRight);
+							} else if(beginX - endX > range) {
+								/*向左滑动*/
+								swipeLeft = true;
+								swipeRight = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeLeft);
+							}
+						} else if(Math.abs(endX - beginX) - Math.abs(endY - beginY) < 0) {
+							// 上下滑动
+							if(endY - beginY > range) {
+								swipeDown = true;
+								swipeUp = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeDown);
+							} else if(beginY - endY > range) {
+								swipeUp = true;
+								swipeDown = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeUp);
+							}
+						}
+					}
+
+				});
+				document.getElementById("page").addEventListener('touchend', function(event) {
+					event.stopPropagation();
+					//event.preventDefault();
+				});
+
+				function eventFunction(stirng) {
+					alert(stirng);
+				}
+			</script>
+
+		</div>
+	</body>
+
+</html>
