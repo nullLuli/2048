@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html style="width: 100%;height: 100%;">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>李璐的第一个js demo</title>
+		<!--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
+		<style>
+			.diamond {
+				background-color: black;
+				color: white;
+				position: absolute;
+				left: 100px;
+				top: 100px;
+				width: 50px;
+				height: 50px;
+			}
+		</style>
+	</head>
+
+	<body style="height: 100%;margin:0;padding:0">
+		<div id="canvas" style="position: relative;width:100%;height: 100%;background-color: darkgrey;">
+			<div class="diamond" id="diamondID">
+				<p>hhhhhh</p>
+			</div>
+			<p id="explainTextID"></p>
+		</div>
+		<script id="followTouch" type="text/javascript">
+			var startX = 0,
+				startY = 0;
+			var explainTextObj = document.getElementById("explainTextID");
+			var diamondObj = document.getElementById("diamondID");
+			var canvasObj = document.getElementById("canvas");
+			var gettype = Object.prototype.toString;
+
+			function touchBegin(event) {
+				event.preventDefault();
+				startX = parseInt(diamondObj.style.left);
+				startY = parseInt(diamondObj.style.top);
+				if (isNaN(startX)) {
+					startX = 0;
+				}
+				if (isNaN(startY)) {
+					startY = 0;
+				}
+				console.log("起始点：" + startX + ' ' + startY);
+			}
+
+			function touchMove(event) {
+				event.preventDefault();
+				var touch = event.touches[0];
+				var x = startX + touch.pageX;
+				var y = startY + touch.pageY;
+				diamondObj.style.top = toString(y) + "px";
+				diamondObj.style.left = toString(x) + "px";
+				console.log("移动点：" + x + " " + y + ":" + diamondObj.style.x + " " + diamondObj.style.y);
+				//				diamondObj.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
+				//				explainTextObj.innerHTML = ";" + x + " " + y + "=" + startX + " " + startY + "+" + touch.pageX + " " + touch.pageY;
+			}
+
+			function touchEnd(event) {
+				//				var trans = diamondObj.style.webkitTransform;
+				//				diamondObj.style.webkitTransform = 'translate(0,0)';
+				//				diamondObj.style.position = "absolute";
+				//				var transX = getTransX(trans);
+				//				diamondObj.style.left = transX;
+				//				var transY = getTransY(trans);
+				//				diamondObj.style.top = transY;
+				//				explainTextObj.innerHTML = ";" + transX + " " + transY;
+			}
+
+			function getTransX(trans) {
+				var stringArray = trans.split(",");
+				var fristStringOfTrans = stringArray[0];
+				var transX = fristStringOfTrans.substring(10, fristStringOfTrans.length - 2);
+				return parseInt(transX);
+			}
+
+			function getTransY(trans) {
+				var stringArray = trans.split(",");
+				var stringOfTrans = stringArray[1];
+				var transY = stringOfTrans.substring(0, stringOfTrans.length - 3);
+				return parseInt(transY);
+			}
+
+			function click_l() {
+//								console.log("点击:" + diamondObj.style.top + " " + diamondObj.style.left);
+				console.log("diamondObj:" + gettype.call(diamondObj) + "style:" + gettype.call(diamondObj.style) + "top:" + gettype.call(diamondObj.style.top));
+			}
+			diamondObj.addEventListener("touchstart", touchBegin);
+			diamondObj.addEventListener("touchmove", touchMove);
+			diamondObj.addEventListener("touchend", touchEnd);
+			canvasObj.addEventListener("click", click_l);
+		</script>
+
+		<!--<script id="clearExplainText" type="text/javascript">
+			var explainTextObj = document.getElementById("explainTextID");
+			var canvasObj = document.getElementById("canvas");
+			
+			function clearExplainText () {
+				explainTextObj.innerHTML = "";
+			}
+			canvasObj.addEventListener("click",clearExplainText);
+		</script>-->
+	</body>
+
+</html>

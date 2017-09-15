@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset=" utf-8">
+		<meta name="author" content="http://www.jb51.net/" />
+		<title>颜色格式转换-脚本之家</title>
+		<style type="text/css">
+			#thediv {
+				width: 200px;
+				height: 100px;
+				background-color: #CCC;
+				line-height: 100px;
+				text-align: center;
+				color: #60F;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="jQuery/jquery-1.8.3.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#bt").click(function() {
+					$("#thediv").text($.fn.getHexBackgroundColor("#thediv", "color"))
+				})
+			})
+		</script>
+	</head>
+
+	<body>
+		<div id="thediv">脚本之家</div>
+		<input type="button" value="点击查看效果" id="bt" />
+	</body>
+
+</html>
