@@ -62,8 +62,8 @@
 					var createDiaObject = $("<div>").attr("id",diamondID);
 					$("#page").append(createDiaObject);
 					$("#" + diamondID).attr("class","diamond");
-					var topValue = diamondPara.row * 50 + $("#table").offset().top;
-					var leftValue = diamondPara.colunm * 50 + $("#table").offset().left;
+					var topValue = diamondPara.row * $(".diamond").width() + $("#table").offset().top;
+					var leftValue = diamondPara.colunm * $(".diamond").width() + $("#table").offset().left;
 					$("#" + diamondID).offset({top:topValue,left:leftValue});
 					$("#" + diamondID).css("background-color",diamondPara.color(diamondPara.value));
 					$("#" +diamondID).text(diamondPara.value);

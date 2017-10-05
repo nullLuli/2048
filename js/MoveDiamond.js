@@ -211,8 +211,8 @@ function uiRefresh(diamond, callback) {
 	var oldID = "diamond" + diamond.lastRow + diamond.lastColunm;
 	var newID = "diamond" + diamond.row + diamond.colunm;
 	console.log(oldID + "应该移动到" + newID);
-	var topValue = diamond.row * 50 + $("#table").offset().top;
-	var leftValue = diamond.colunm * 50 + $("#table").offset().left;
+	var topValue = diamond.row * $(".diamond").width() + $("#table").offset().top;
+	var leftValue = diamond.colunm * $(".diamond").width() + $("#table").offset().left;
 	$("#" + oldID).animate({
 		top: topValue,
 		left: leftValue

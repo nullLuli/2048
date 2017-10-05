@@ -9,13 +9,13 @@ var diamondListTest = {
 	"10": diamond10
 };
 var diamond3 = new Diamond(2, 3, 4);
-//var diamondListTestAnswer = {
-//	"23": diamond3
-//};
+var diamondListTestAnswer = {
+	"23": diamond3
+};
 
 function test()
 {
-	testMoveAndGen();
+	testUIRefresh(diamondListTestAnswer);
 }
 function testMoveAndGen()
 {
