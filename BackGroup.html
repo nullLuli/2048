@@ -14,13 +14,19 @@
 		<style type="text/css">
 			.backGroud {
 				background-color: grey;
-				position: relative;
-				height: 200px;
-				width: 200px;
-				margin-left: 50px;
-				margin-top: 50px;
-				border-radius: 5px;
+				position: absolute;
+				height: 80vw;
+				width: 80%;
+				margin-left: 10%;
+				border-radius: 10px;
+				/*padding: 0;*/
+				/*position: absolute !important;*/
+				/*top: 40px !important;
+				right: 0;
+				bottom: 58px !important;
+				left: 0 !important;*/
 			}
+			
 			.backGroudCopy {
 				background-color: grey;
 				position: relative;
@@ -28,21 +34,21 @@
 				width: 200px;
 				margin-left: 250px;
 				margin-top: 250px;
-				border-radius: 5px;
+				border-radius: 10px;
 			}
-
+			
 			.grid {
 				background-color: gainsboro;
-				height: 40px;
-				width: 40px;
-				border-radius: 5px;
+				height: 15%;
+				width: 15%;
+				border-radius: 10px;
 			}
 			
 			.diamond {
 				position: absolute;
-				height: 40px;
-				width: 40px;
-				border-radius: 5px;
+				height: 15%;
+				width: 15%;
+				border-radius: 10px;
 				color: red;
 			}
 			
@@ -56,37 +62,31 @@
 		</style>
 	</head>
 
-	<body id="body">
-		<div data-role="page" id="page">
-			<div class="swiper-container">
-				<div class="swiper-wrapper">
-					<div class="swiper-slide"> Slide1</div>
-					<div class="swiper-slide"> Slide2</div>
-					<div class="swiper-slide"> Slide3</div>
-				</div>
-			</div>
-			<table id="table" border="1" class="backGroud" cellspacing="3px">
-				<script type="text/javascript">
-					var initTable = function() {
-						console.log("初始化table")
-						for(var i = 0; i < 4; i++) {
-							var createTrString = $("<tr>").attr("id", "tr" + i);
-							$("#table").append(createTrString);
-							for(var j = 0; j < 4; j++) {
-								var createTdString = $("<td>").attr("class", "grid");
-								$("#tr" + i).append(createTdString);
+	<body id="body" style="height: 100%">
+		<div data-role="page" id="page" style="height: 100%">
+			<div data-role='content' id="content" style="height:100%">
+				<table id="table" border="1" class="backGroud" cellspacing="3px">
+					<script type="text/javascript">
+						var initTable = function() {
+							console.log("初始化table")
+							for(var i = 0; i < 4; i++) {
+								var createTrString = $("<tr>").attr("id", "tr" + i);
+								$("#table").append(createTrString);
+								for(var j = 0; j < 4; j++) {
+									var createTdString = $("<td>").attr("class", "grid");
+									$("#tr" + i).append(createTdString);
+								}
 							}
-						}
-					};
+						};
 
-					//					$(document).ready(initTable);
+						//					$(document).ready(initTable);
 
-					$(document).on("pagecreate", function() {
-						initTable();
-					});
-				</script>
-			</table>
-			<table id="tableCopy" border="1" class="backGroudCopy" cellspacing="3px">
+						$(document).on("pagecreate", function() {
+							initTable();
+						});
+					</script>
+				<!--</table>
+				<table id="tableCopy" border="1" class="backGroudCopy" cellspacing="3px">
 				<script type="text/javascript">
 					var initTableCopy = function() {
 						console.log("初始化table")
@@ -106,10 +106,9 @@
 						initTableCopy();
 					});
 				</script>
-			</table>
-			<div id="clearButton" class="clearButtonStyle">
+			</table>-->
 			</div>
-			
+
 			<script>
 				var beginX, beginY, endX, endY, swipeLeft, swipeRight, swipeUp, swipeDown, range = 30;
 				var haveIdentified = false;
@@ -125,32 +124,32 @@
 				}
 
 				function debugClick(dirction) {
-					moveDiamonds(dirction,diamondList,function () {
+					moveDiamonds(dirction, diamondList, function() {
 						console.log("回调执行");
 						initRound();
-						
+
 						refreshCopyTable();
 					});
-//					test();
+					//					test();
 					console.log(event.type);
-					}
+				}
 
-					function refreshCopyTable() {
-						//先清空
-						var count = 0;
-						$("div[id^='copydiamond']").each(function() {
-							$(this).remove();
-							count++;
-						});
-						console.log("查找到 "+count+"个对象");
-						//然后生成
-						for(var i in diamondList) {
-							var diamond = diamondList[i];
-							generateCopyDiv(diamond);
-						}
+				function refreshCopyTable() {
+					//先清空
+					var count = 0;
+					$("div[id^='copydiamond']").each(function() {
+						$(this).remove();
+						count++;
+					});
+					console.log("查找到 " + count + "个对象");
+					//然后生成
+					for(var i in diamondList) {
+						var diamond = diamondList[i];
+						generateCopyDiv(diamond);
 					}
+				}
 
-					document.getElementById("page").addEventListener('touchstart', function(event) {
+				document.getElementById("page").addEventListener('touchstart', function(event) {
 					event.stopPropagation();
 					//event.preventDefault();
 					beginX = event.targetTouches[0].screenX;
