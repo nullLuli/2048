@@ -45,7 +45,7 @@
 				position: absolute;
 				background-color: firebrick;
 				border-radius: 2vw;
-				width: 18%;
+				width: 21.95%;
 				height: 18vw;
 			}
 			
@@ -72,15 +72,13 @@
 								$("#table").append(createTrString);
 								$("#tr" + i).attr("class", "tableRow");
 								var topValue = i * ($(".tableRow").height() * 1.1) + $(".tableRow").height() * 0.1;
-//								(topValue == 0) ? topValue = $(".tableRow").height() * 0.1 : topValue;
 								$("#tr" + i).offset({top:topValue});
 								for(var j = 0; j < 4; j++) {
-//									var createTdString = $("<div>").attr("id", "td" + j);
-//									$("#tr" + i).append(createTdString);
-//									$("#td" + j).attr("class","grid");
-//									var topValue = i * ($(".grid").width() + gridMargin) + $("#table").offset().top;
-//									var leftValue = j * ($(".grid").width() + gridMargin) + $("#table").offset().left;
-//									$("#td" + j).offset({top:topValue,left:leftValue});
+									var createTdString = $("<div>").attr("id", "td" + i + j);
+									$("#tr" + i).append(createTdString);
+									$("#td" + i + j).attr("class","grid");
+									var leftValue = j * $(".grid").height() * 1.1 + $(".grid").height() * 0.1;
+									$("#td" + i + j).offset({left:leftValue});
 								}
 							}
 						};
