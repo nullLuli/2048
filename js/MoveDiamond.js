@@ -216,7 +216,7 @@ function uiRefresh(diamond, callback) {
 	$("#" + oldID).animate({
 		top: topValue,
 		left: leftValue
-	}, "slow", function() {
+	}, 200, function() {
 		$("#" + oldID).text(diamond.value);
 		var color = diamond.color(diamond.value);
 		$("#" + oldID).css("background-color", color);
@@ -227,8 +227,10 @@ function uiRefresh(diamond, callback) {
 		} else {
 			$("#" + oldID).attr("id", newID);
 			console.log(oldID + "变成" + newID);
+		}
+		if (diamond.merged) {
 			//合并动画
-			flash("#" + newID,8,10,100);
+			flash("#" + newID,3,10,50);
 		}
 		callback();
 	});
