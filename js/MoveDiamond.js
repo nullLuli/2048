@@ -227,9 +227,28 @@ function uiRefresh(diamond, callback) {
 		} else {
 			$("#" + oldID).attr("id", newID);
 			console.log(oldID + "变成" + newID);
+			//合并动画
+			flash("#" + newID,8,10,100);
 		}
 		callback();
 	});
+}
+
+function flash(obj,time,wh,fx)
+{ 
+	var x= $(obj).offset().left;
+	var y= $(obj).offset().top;
+	var width = $(obj).width();
+	var height = $(obj).height();
+	for(var i=1; i<=time; i++){
+		if(i%2==0)
+		{
+			$(obj).animate({left:x+wh,width:width-2*wh,top:y+wh,height:height-2*wh},fx);
+		}else
+		{
+			$(obj).animate({left:x,width:width,top:y,height:height},fx);
+		}		
+	}
 }
 
 function moveToUIFresh(oldRow, oldColunm, newDiamond) {
