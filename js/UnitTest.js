@@ -55,6 +55,12 @@ function testUIRefresh(diamondListTestParam) {
 	}
 
 	refreshDataToUI(diamondListTestParam);
+	
+	for(var i in diamondListTestParam) {
+		var diamond = diamondListTestParam[i];
+		flash("#" + diamond.id(diamond),5,10,100);
+	}
+	
 }
 
 //var diamond4 = new Diamond(0, 1, 2);

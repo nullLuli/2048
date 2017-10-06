@@ -72,13 +72,17 @@
 								$("#table").append(createTrString);
 								$("#tr" + i).attr("class", "tableRow");
 								var topValue = i * ($(".tableRow").height() * 1.1) + $(".tableRow").height() * 0.1;
-								$("#tr" + i).offset({top:topValue});
+								$("#tr" + i).offset({
+									top: topValue
+								});
 								for(var j = 0; j < 4; j++) {
 									var createTdString = $("<div>").attr("id", "td" + i + j);
 									$("#tr" + i).append(createTdString);
-									$("#td" + i + j).attr("class","grid");
+									$("#td" + i + j).attr("class", "grid");
 									var leftValue = j * $(".grid").height() * 1.1 + $(".grid").height() * 0.1;
-									$("#td" + i + j).offset({left:leftValue});
+									$("#td" + i + j).offset({
+										left: leftValue
+									});
 								}
 							}
 						};
@@ -152,10 +156,8 @@
 					moveDiamonds(dirction, diamondList, function() {
 						console.log("回调执行");
 						initRound();
-
-						//						refreshCopyTable();
 					});
-					//					test();
+//					test();
 					console.log(event.type);
 				}
 
