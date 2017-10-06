@@ -15,9 +15,10 @@
 			.backGroud {
 				background-color: grey;
 				position: absolute;
-				height: 80vw;
-				width: 80%;
-				margin-left: 10%;
+				height: 82vw;
+				width: 82%;
+				left: 10%;
+				top: 10vw;
 				border-radius: 2vw;
 			}
 			
@@ -31,9 +32,21 @@
 				border-radius: 10px;
 			}
 			
+			.tableRow {
+				position: absolute;
+				height: 18vw;
+				width: 100%;
+				background-color: lightblue;
+				/*margin-top: 2vw;*/
+				/*margin-bottom: 2vw;*/
+			}
+			
 			.grid {
-				background-color: gainsboro;
+				position: absolute;
+				background-color: firebrick;
 				border-radius: 2vw;
+				width: 18%;
+				height: 18vw;
 			}
 			
 			.diamond {
@@ -43,21 +56,43 @@
 				border-radius: 2vw;
 				color: red;
 			}
-			
-			.clearButtonStyle {
-				position: relative;
-				height: 40px;
-				width: 100px;
-				margin: 10px;
-				background-color: green;
-			}
 		</style>
 	</head>
 
 	<body id="body" style="height: 100%">
 		<div data-role="page" id="page" style="height: 100%">
 			<div data-role='content' id="content" style="height:100%">
-				<table id="table" class="backGroud" cellspacing="3">
+				<div id="table" class="backGroud">
+					<script type="text/javascript">
+						var gridMargin = 0;
+						var initTable = function() {
+							console.log("初始化table")
+							for(var i = 0; i < 4; i++) {
+								var createTrString = $("<div>").attr("id", "tr" + i);
+								$("#table").append(createTrString);
+								$("#tr" + i).attr("class", "tableRow");
+								var topValue = i * ($(".tableRow").height() * 1.1) + $(".tableRow").height() * 0.1;
+//								(topValue == 0) ? topValue = $(".tableRow").height() * 0.1 : topValue;
+								$("#tr" + i).offset({top:topValue});
+								for(var j = 0; j < 4; j++) {
+//									var createTdString = $("<div>").attr("id", "td" + j);
+//									$("#tr" + i).append(createTdString);
+//									$("#td" + j).attr("class","grid");
+//									var topValue = i * ($(".grid").width() + gridMargin) + $("#table").offset().top;
+//									var leftValue = j * ($(".grid").width() + gridMargin) + $("#table").offset().left;
+//									$("#td" + j).offset({top:topValue,left:leftValue});
+								}
+							}
+						};
+
+						//					$(document).ready(initTable);
+
+						$(document).on("pagecreate", function() {
+							initTable();
+						});
+					</script>
+				</div>
+				<!--<table id="table" class="backGroud" cellspacing="3">
 					<script type="text/javascript">
 						var initTable = function() {
 							console.log("初始化table")
@@ -77,8 +112,8 @@
 							initTable();
 						});
 					</script>
-					<!--</table>
-				<table id="tableCopy" border="1" class="backGroudCopy" cellspacing="3px">
+				</table>-->
+				<!--<table id="tableCopy" border="1" class="backGroudCopy" cellspacing="3px">
 				<script type="text/javascript">
 					var initTableCopy = function() {
 						console.log("初始化table")
@@ -120,9 +155,9 @@
 						console.log("回调执行");
 						initRound();
 
-//						refreshCopyTable();
+						//						refreshCopyTable();
 					});
-//					test();
+					//					test();
 					console.log(event.type);
 				}
 
