@@ -1,5 +1,5 @@
 				var diamondList = new Array(4);
-				var baseColor = 30;
+				var baseColor = 10;
 
 				//初始化格局
 				function initRound() {
@@ -100,9 +100,64 @@
 					this.lastValue;
 					this.mergeTo = false;//被并入下一个格子
 					this.color = function(value) {
-						var multiBaseColor = (baseColor * value);
-						var color = "rgb(" + multiBaseColor + "," + multiBaseColor + ","+ multiBaseColor + ")";
-						return $.fn.getHexBackgroundColor(color);
+						var result;
+						switch (value){
+							case 2:
+							{
+								result = "#fdffdf";
+							}
+								break;
+							case 4:
+							{
+								result = "#f3d7b5";
+							}
+								break;
+							case 8:
+							{
+								result = "#efcee8";
+							}
+								break;
+							case 16:
+							{
+								result = "#daf9ca";
+							}
+								break;
+								case 32:
+							{
+								result = "#c7b3e5";
+							}
+								break;
+								case 64:
+							{
+								result = "#ffebcc";
+							}
+								break;
+								case 128:
+							{
+								result = "#ffb86c";
+							}
+								break;
+//								case 2:
+//							{
+//								result = "#fdffdf";
+//							}
+//								break;
+//								case 2:
+//							{
+//								result = "#fdffdf";
+//							}
+								break;
+							default:
+							{
+								result = "#000000";
+							}
+								break;
+					}
+						return result;
+						
+//						var multiBaseColor = (baseColor * value);
+//						var color = "rgb(" + multiBaseColor + "," + multiBaseColor + ","+ multiBaseColor + ")";
+//						return $.fn.getHexBackgroundColor(color);
 					}
 					this.id = function(diamond) {
 						return "diamond" + diamond.row + diamond.colunm;
