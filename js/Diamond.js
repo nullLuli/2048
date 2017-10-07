@@ -137,15 +137,25 @@
 								result = "#ffb86c";
 							}
 								break;
-//								case 2:
-//							{
-//								result = "#fdffdf";
-//							}
-//								break;
-//								case 2:
-//							{
-//								result = "#fdffdf";
-//							}
+								case 256:
+							{
+								result = "#f01b2d";
+							}
+								break;
+								case 512:
+							{
+								result = "#869b74";
+							}
+								break;
+							case 1024:
+							{
+								result = "#ff5983";
+							}
+								break;
+								case 2048:
+							{
+								result = "#c1194e";
+							}
 								break;
 							default:
 							{
@@ -153,11 +163,7 @@
 							}
 								break;
 					}
-						return result;
-						
-//						var multiBaseColor = (baseColor * value);
-//						var color = "rgb(" + multiBaseColor + "," + multiBaseColor + ","+ multiBaseColor + ")";
-//						return $.fn.getHexBackgroundColor(color);
+						return result;						
 					}
 					this.id = function(diamond) {
 						return "diamond" + diamond.row + diamond.colunm;
