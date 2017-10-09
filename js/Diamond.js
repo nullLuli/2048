@@ -67,6 +67,7 @@
 					$("#" + diamondID).offset({top:topValue,left:leftValue});
 					$("#" + diamondID).css("background-color",diamondPara.color(diamondPara.value));
 					$("#" +diamondID).text(diamondPara.value);
+					flash("#" + diamondID,3,10,50);
 					console.log("生成方块" + diamondPara.row + diamondPara.colunm);
 				}
 				
