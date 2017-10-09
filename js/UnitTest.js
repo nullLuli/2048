@@ -2,65 +2,78 @@
 var diamond1 = new Diamond(1, 0, 2);
 var diamond2 = new Diamond(1, 2, 2);
 
-var diamond30 = new Diamond(3,0,2);
-var diamond10 = new Diamond(1,0,2);
+var diamond30 = new Diamond(3, 0, 2);
+var diamond10 = new Diamond(1, 0, 2);
 var diamondListTest = {
 	"30": diamond30,
 	"10": diamond10
 };
-var diamond3 = new Diamond(2, 3, 4);
+var diamond234 = new Diamond(2, 3, 4);
 var diamondListTestAnswer = {
-	"23": diamond3
+	"23": diamond234
 };
+var diamond11 = new Diamond(1, 1, 2);
+var diamond13 = new Diamond(1, 3, 4);
+var diamond23 = new Diamond(2, 3, 2);
+//var diamond30 = new Diamond(3, 0, 2);
+var diamond338 = new Diamond(3, 3, 8);
 
-function test()
-{
-	testUIRefresh(diamondListTestAnswer);
+function test() {
+	testMoveAndGen()
 }
-function testMoveAndGen()
-{
-	testUIRefresh(diamondListTest);
-	
-	moveDiamonds(SwipeDirection.SwipeUp, diamondListTest);
-	
-	setTimeout(function() {
-		generateDiv(diamond30);
-	}, 3000);
+
+function testMoveAndGen() {
+	diamondListTest = {
+		"11": diamond11,
+		"13": diamond13,
+		"23": diamond23,
+		"30": diamond30,
+		"33": diamond338
+	};
+
+	testUIRefresh(diamondListTest, function() {});
+	moveDiamonds(SwipeDirection.SwipeDown, diamondListTest, function() {
+		console.log("移动完成");
+		setTimeout(function() {
+			generateDiv(diamond11);
+		}, 3000);
+	});
 }
+
 function testMoveDiamonds() {
-	
+
 	testUIRefresh(diamondListTest);
-	
+
 	moveDiamonds(SwipeDirection.SwipeUp, diamondListTest);
-	
-//	refreshDataToUI(diamondListTest);
-//	//检查结果
-//	if(diamondListTest["23"]) {
-//		var diamond4 = diamondListTest["23"];
-//		if(diamond4.row == diamond3.row && diamond4.colunm == diamond3.colunm && diamond4.value == diamond3.value) {
-//			console.log("验证通过");
-//		} else {
-//			console.log("验证失败2");
-//		}
-//	} else {
-//		console.log("验证失败1");
-//	}
+
+	//	refreshDataToUI(diamondListTest);
+	//	//检查结果
+	//	if(diamondListTest["23"]) {
+	//		var diamond4 = diamondListTest["23"];
+	//		if(diamond4.row == diamond234.row && diamond4.colunm == diamond234.colunm && diamond4.value == diamond234.value) {
+	//			console.log("验证通过");
+	//		} else {
+	//			console.log("验证失败2");
+	//		}
+	//	} else {
+	//		console.log("验证失败1");
+	//	}
 }
 
-function testUIRefresh(diamondListTestParam) {
+function testUIRefresh(diamondListTestParam, callback) {
 	//在界面上生成方块
 	for(var i in diamondListTestParam) {
 		var diamond = diamondListTestParam[i];
 		generateDiv(diamond);
 	}
 
-	refreshDataToUI(diamondListTestParam);
-	
-	for(var i in diamondListTestParam) {
-		var diamond = diamondListTestParam[i];
-		flash("#" + diamond.id(diamond),5,10,100);
-	}
-	
+	refreshDataToUI(diamondListTestParam, callback);
+
+	//	for(var i in diamondListTestParam) {
+	//		var diamond = diamondListTestParam[i];
+	//		flash("#" + diamond.id(diamond),5,10,100);
+	//	}
+
 }
 
 //var diamond4 = new Diamond(0, 1, 2);
@@ -72,8 +85,8 @@ function testUIRefresh(diamondListTestParam) {
 //	"23": diamond5
 //};
 
-function testMove(){
-		//在界面上生成方块
+function testMove() {
+	//在界面上生成方块
 	for(var i in diamondListTestUI) {
 		var diamond = diamondListTestUI[i];
 		generateDiv(diamond);
