@@ -219,7 +219,6 @@ function uiRefresh(diamond, callback) {
 	}, 200, function() {
 		$("#" + oldID).text(diamond.value);
 		var color = diamond.color(diamond.value);
-		 console.log("value: " + diamond.value + "   color: " + color);
 		$("#" + oldID).css("background-color", color);
 		if(diamond.mergeTo) {
 			delete diamondListLocal[diamond.row.toString() + diamond.colunm.toString()];

@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="js/Diamond.js"></script>
 		<script type="text/javascript" src="js/MoveDiamond.js"></script>
 		<script type="text/javascript" src="js/UnitTest.js"></script>
+		<script type="text/javascript" src="js/BackFunction.js"></script>
 		<title></title>
 		<style type="text/css">
 			.backGroud {
@@ -18,7 +19,7 @@
 				height: 82vw;
 				width: 82%;
 				left: 10%;
-				top: 10vw;
+				top: 30vw;
 				border-radius: 2vw;
 			}
 			
@@ -59,6 +60,18 @@
 				text-align: center;
 				line-height:18vw;
 			}
+			
+			.back{
+				position: absolute;
+				height: 4vw;
+				width: 18vw;
+				top: 25vw;
+				left: 10%;
+				background-color: goldenrod;
+				font-size: 100%;
+				text-align: center;
+				line-height:4vw;
+			}
 		</style>
 	</head>
 
@@ -89,56 +102,24 @@
 								}
 							}
 						};
-
-						//					$(document).ready(initTable);
-
 						$(document).on("pagecreate", function() {
 							initTable();
 						});
 					</script>
 				</div>
-				<!--<table id="table" class="backGroud" cellspacing="3">
+				<div id="back" class="back">
+					后退一步
 					<script type="text/javascript">
-						var initTable = function() {
-							console.log("初始化table")
-							for(var i = 0; i < 4; i++) {
-								var createTrString = $("<tr>").attr("id", "tr" + i);
-								$("#table").append(createTrString);
-								for(var j = 0; j < 4; j++) {
-									var createTdString = $("<td>").attr("class", "grid");
-									$("#tr" + i).append(createTdString);
-								}
-							}
-						};
-
-						//					$(document).ready(initTable);
-
-						$(document).on("pagecreate", function() {
-							initTable();
+						$("#back").click(function(){
+							//取出数据
+							var diamondListBack = lastData();
+							//清除界面
+							clearUI();
+							//生成
+							generateDiamondFromList(diamondListBack);
 						});
 					</script>
-				</table>-->
-				<!--<table id="tableCopy" border="1" class="backGroudCopy" cellspacing="3px">
-				<script type="text/javascript">
-					var initTableCopy = function() {
-						console.log("初始化table")
-						for(var i = 0; i < 4; i++) {
-							var createTrString = $("<tr>").attr("id", "copytr" + i);
-							$("#tableCopy").append(createTrString);
-							for(var j = 0; j < 4; j++) {
-								var createTdString = $("<td>").attr("class", "grid");
-								$("#copytr" + i).append(createTdString);
-							}
-						}
-					};
-
-					//					$(document).ready(initTable);
-
-					$(document).on("pagecreate", function() {
-						initTableCopy();
-					});
-				</script>
-			</table>-->
+				</div>
 			</div>
 
 			<script>
@@ -156,6 +137,8 @@
 				}
 
 				function debugClick(dirction) {
+					//返回功能之记录当前数据
+					record(diamondList);
 					moveDiamonds(dirction, diamondList, function() {
 						console.log("回调执行");
 						initRound();
