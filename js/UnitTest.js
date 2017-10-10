@@ -1,31 +1,48 @@
 //首先构造原始数据
 var diamond1 = new Diamond(1, 0, 2);
-var diamond2 = new Diamond(1, 2, 2);
-
+var diamond12 = new Diamond(1, 2, 2);
 var diamond30 = new Diamond(3, 0, 2);
 var diamond10 = new Diamond(1, 0, 2);
+var diamond11 = new Diamond(1, 1, 2);
+var diamond23 = new Diamond(2, 3, 2);
+
+var diamond234 = new Diamond(2, 3, 4);
+var diamond134 = new Diamond(1, 3, 4);
+
+var diamond338 = new Diamond(3, 3, 8);
+var diamond038 = new Diamond(0,3,8);
+var diamond138 = new Diamond(1,3,8);
+
 var diamondListTest = {
 	"30": diamond30,
 	"10": diamond10
 };
-var diamond234 = new Diamond(2, 3, 4);
 var diamondListTestAnswer = {
 	"23": diamond234
 };
-var diamond11 = new Diamond(1, 1, 2);
-var diamond13 = new Diamond(1, 3, 4);
-var diamond23 = new Diamond(2, 3, 2);
-//var diamond30 = new Diamond(3, 0, 2);
-var diamond338 = new Diamond(3, 3, 8);
+
+var diamondListTest2 = {
+	"03":diamond038,
+	"12":diamond12,
+	"13":diamond138,
+	"23":diamond234
+}
 
 function test() {
-	testMoveAndGen()
+	testMerge(diamondListTest2);
+}
+
+function testMerge (diamondListParam) {
+	testUIRefresh(diamondListParam,function () {});
+	moveDiamonds(SwipeDirection.SwipeDown,diamondListParam,function () {
+		console.log("移动完成");
+	});
 }
 
 function testMoveAndGen() {
 	diamondListTest = {
 		"11": diamond11,
-		"13": diamond13,
+		"13": diamond134,
 		"23": diamond23,
 		"30": diamond30,
 		"33": diamond338
@@ -67,7 +84,7 @@ function testUIRefresh(diamondListTestParam, callback) {
 		generateDiv(diamond);
 	}
 
-	refreshDataToUI(diamondListTestParam, callback);
+//	refreshDataToUI(diamondListTestParam, SwipeDirection.SwipeDown,callback);
 
 	//	for(var i in diamondListTestParam) {
 	//		var diamond = diamondListTestParam[i];
@@ -80,7 +97,7 @@ function testUIRefresh(diamondListTestParam, callback) {
 //var diamond5 = new Diamond(1, 3, 2);
 //var diamondListTestUI = {
 //	"20": diamond1,
-//	"22": diamond2,
+//	"22": diamond12,
 //	"11": diamond4,
 //	"23": diamond5
 //};
@@ -95,9 +112,9 @@ function testMove() {
 	diamond1.lastRow = 1;
 	diamond1.lastColunm = 0;
 	diamond1.row = 2;
-	diamond2.lastRow = 1;
-	diamond2.lastColunm = 2;
-	diamond2.row = 2;
+	diamond12.lastRow = 1;
+	diamond12.lastColunm = 2;
+	diamond12.row = 2;
 	diamond4.lastRow = 0;
 	diamond4.lastColunm = 1;
 	diamond4.row = 1;

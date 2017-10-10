@@ -70,30 +70,85 @@ function moveDiamonds(dirction, diamondListPara, callback) {
 		}
 	}
 
-	refreshDataToUI(diamondListLocal, callback);
+	refreshDataToUI(diamondListLocal, dirction, callback);
 }
 
-function refreshDataToUI(diamondListParam, callback) {
+function refreshDataToUI(diamondListParam, dirction, callback) {
 	var length = countDiamondList(diamondListParam);
 	if(length > 0) {
 		var count = 0;
-		for(var i in diamondListParam) {
-			var diamond = diamondListParam[i];
-			uiRefresh(diamond, function() {
-				count++;
-				if(count == length) {
-					callback();
+
+		function handleUIRefresh(i, j) {
+			var diamond = getDiamondWithOldPosition(i, j);
+			var isDiamondExist = isExistAtWithOldPosition(i, j, diamondListLocal);
+			if(isDiamondExist) {
+				uiRefresh(diamond, function() {
+					count++;
+					if(count == length) {
+						callback();
+					}
+				});
+			}
+		}
+
+		switch(dirction) {
+			case SwipeDirection.SwipeLeft:
+				{
+					for(var j = 0; j < 4; j++) {
+						for(var i = 0; i < 4; i++) {
+							handleUIRefresh(i, j);
+						}
+					}
 				}
-			});
+				break;
+			case SwipeDirection.SwipeRight:
+				{
+					for(var j = 3; j >= 0; j--) {
+						for(var i = 0; i < 4; i++) {
+							var diamond = getDiamond(i, j);
+							uiRefresh(diamond, function() {
+								count++;
+								if(count == length) {
+									callback();
+								}
+							});
+						}
+					}
+				}
+				break;
+			case SwipeDirection.SwipeDown:
+				{
+					for(var i = 3; i >= 0; i--) {
+						for(var j = 0; j < 4; j++) {
+							handleUIRefresh(i, j);
+						}
+					}
+				}
+				break;
+			case SwipeDirection.SwipeUp:
+				{
+					for(var i = 0; i < 4; i++) {
+						for(var j = 0; j < 4; j++) {
+							var diamond = getDiamond(i, j);
+							uiRefresh(diamond, function() {
+								count++;
+								if(count == length) {
+									callback();
+								}
+							});
+						}
+					}
+				}
+				break;
 		}
 	} else {
 		callback();
 	}
 }
 
-function countDiamondList(diamondListParam){
+function countDiamondList(diamondListParam) {
 	var count = 0;
-	for (var i in diamondListParam) {
+	for(var i in diamondListParam) {
 		count++;
 	}
 	return count;
@@ -157,6 +212,25 @@ function getDiamond(row, colunm) {
 	return diamondListLocal[row.toString() + colunm.toString()];
 }
 
+function getDiamondWithOldPosition(row, colunm) {
+	for(var key in diamondListLocal) {
+		var diamond = diamondListLocal[key];
+		if(diamond.lastRow = row && diamond.lastColunm == colunm) {
+			return diamond;
+		}
+	}
+}
+
+function isExistAtWithOldPosition(row, colunm, inDiamondList) {
+	for(var key in inDiamondList) {
+		var diamond = inDiamondList[key];
+		if(diamond.lastRow = row && diamond.lastColunm == colunm) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function checkIfDiamondValueEqual(diamond1, diamond2) {
 	return diamond1.value == diamond2.value;
 }
@@ -212,7 +286,7 @@ function uiRefresh(diamond, callback) {
 	var newID = "diamond" + diamond.row + diamond.colunm;
 	console.log(oldID + "应该移动到" + newID);
 	var topValue = $("#td" + diamond.row + diamond.colunm).offset().top;
-	var leftValue =  $("#td" + diamond.row + diamond.colunm).offset().left;
+	var leftValue = $("#td" + diamond.row + diamond.colunm).offset().left;
 	$("#" + oldID).animate({
 		top: topValue,
 		left: leftValue
@@ -220,6 +294,7 @@ function uiRefresh(diamond, callback) {
 		$("#" + oldID).text(diamond.value);
 		var color = diamond.color(diamond.value);
 		$("#" + oldID).css("background-color", color);
+		console.log(oldID + "变成" + diamond.value);
 		if(diamond.mergeTo) {
 			delete diamondListLocal[diamond.row.toString() + diamond.colunm.toString()];
 			$("#" + oldID).remove();
@@ -228,28 +303,35 @@ function uiRefresh(diamond, callback) {
 			$("#" + oldID).attr("id", newID);
 			console.log(oldID + "变成" + newID);
 		}
-		if (diamond.merged) {
+		if(diamond.merged) {
 			//合并动画
-			flash("#" + newID,3,10,50);
+			flash("#" + newID, 3, 10, 50);
 		}
 		callback();
 	});
 }
 
-function flash(obj,time,wh,fx)
-{ 
-	var x= $(obj).offset().left;
-	var y= $(obj).offset().top;
+function flash(obj, time, wh, fx) {
+	var x = $(obj).offset().left;
+	var y = $(obj).offset().top;
 	var width = $(obj).width();
 	var height = $(obj).height();
-	for(var i=1; i<=time; i++){
-		if(i%2==0)
-		{
-			$(obj).animate({left:x+wh,width:width-2*wh,top:y+wh,height:height-2*wh},fx);
-		}else
-		{
-			$(obj).animate({left:x,width:width,top:y,height:height},fx);
-		}		
+	for(var i = 1; i <= time; i++) {
+		if(i % 2 == 0) {
+			$(obj).animate({
+				left: x + wh,
+				width: width - 2 * wh,
+				top: y + wh,
+				height: height - 2 * wh
+			}, fx);
+		} else {
+			$(obj).animate({
+				left: x,
+				width: width,
+				top: y,
+				height: height
+			}, fx);
+		}
 	}
 }
 
