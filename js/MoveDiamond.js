@@ -76,71 +76,64 @@ function moveDiamonds(dirction, diamondListPara, callback) {
 function refreshDataToUI(diamondListParam, dirction, callback) {
 	var length = countDiamondList(diamondListParam);
 	if(length > 0) {
-		var count = 0;
-
-		function handleUIRefresh(i, j) {
+		function checkExistAndRefreshColor(i, j) {
 			var diamond = getDiamondWithOldPosition(i, j);
 			var isDiamondExist = isExistAtWithOldPosition(i, j, diamondListLocal);
 			if(isDiamondExist) {
-				uiRefresh(diamond, function() {
-					count++;
-					if(count == length) {
-						callback();
-					}
-				});
+				uiColorRefresh(diamond);
 			}
 		}
+		var count = 0;
+		for(var key in diamondListParam) {
+			var diamond = diamondListParam[key];
+			uiMove(diamond, function() {
+				count++;
+				if(count == length) {
+					//更新颜色和text
+					switch(dirction) {
+						case SwipeDirection.SwipeLeft:
+							{
+								for(var j = 0; j < 4; j++) {
+									for(var i = 0; i < 4; i++) {
+										checkExistAndRefreshColor(i, j);
+									}
+								}
+							}
+							break;
+						case SwipeDirection.SwipeRight:
+							{
+								for(var j = 3; j >= 0; j--) {
+									for(var i = 0; i < 4; i++) {
+										checkExistAndRefreshColor(i, j);
+									}
+								}
+							}
+							break;
+						case SwipeDirection.SwipeDown:
+							{
+								for(var i = 3; i >= 0; i--) {
+									for(var j = 0; j < 4; j++) {
+										checkExistAndRefreshColor(i, j);
+									}
+								}
+							}
+							break;
+						case SwipeDirection.SwipeUp:
+							{
+								for(var i = 0; i < 4; i++) {
+									for(var j = 0; j < 4; j++) {
+										checkExistAndRefreshColor(i, j);
+									}
+								}
+							}
+							break;
+					}
 
-		switch(dirction) {
-			case SwipeDirection.SwipeLeft:
-				{
-					for(var j = 0; j < 4; j++) {
-						for(var i = 0; i < 4; i++) {
-							handleUIRefresh(i, j);
-						}
-					}
+					callback();
 				}
-				break;
-			case SwipeDirection.SwipeRight:
-				{
-					for(var j = 3; j >= 0; j--) {
-						for(var i = 0; i < 4; i++) {
-							var diamond = getDiamond(i, j);
-							uiRefresh(diamond, function() {
-								count++;
-								if(count == length) {
-									callback();
-								}
-							});
-						}
-					}
-				}
-				break;
-			case SwipeDirection.SwipeDown:
-				{
-					for(var i = 3; i >= 0; i--) {
-						for(var j = 0; j < 4; j++) {
-							handleUIRefresh(i, j);
-						}
-					}
-				}
-				break;
-			case SwipeDirection.SwipeUp:
-				{
-					for(var i = 0; i < 4; i++) {
-						for(var j = 0; j < 4; j++) {
-							var diamond = getDiamond(i, j);
-							uiRefresh(diamond, function() {
-								count++;
-								if(count == length) {
-									callback();
-								}
-							});
-						}
-					}
-				}
-				break;
+			});
 		}
+
 	} else {
 		callback();
 	}
@@ -215,7 +208,7 @@ function getDiamond(row, colunm) {
 function getDiamondWithOldPosition(row, colunm) {
 	for(var key in diamondListLocal) {
 		var diamond = diamondListLocal[key];
-		if(diamond.lastRow = row && diamond.lastColunm == colunm) {
+		if(diamond.lastRow == row && diamond.lastColunm == colunm) {
 			return diamond;
 		}
 	}
@@ -224,7 +217,7 @@ function getDiamondWithOldPosition(row, colunm) {
 function isExistAtWithOldPosition(row, colunm, inDiamondList) {
 	for(var key in inDiamondList) {
 		var diamond = inDiamondList[key];
-		if(diamond.lastRow = row && diamond.lastColunm == colunm) {
+		if(diamond.lastRow == row && diamond.lastColunm == colunm) {
 			return true;
 		}
 	}
@@ -281,34 +274,41 @@ function tempDiamond(dirction, diamond) {
 	}
 }
 
-function uiRefresh(diamond, callback) {
+function uiMove(diamond, callback) {
 	var oldID = "diamond" + diamond.lastRow + diamond.lastColunm;
 	var newID = "diamond" + diamond.row + diamond.colunm;
 	console.log(oldID + "应该移动到" + newID);
+
 	var topValue = $("#td" + diamond.row + diamond.colunm).offset().top;
 	var leftValue = $("#td" + diamond.row + diamond.colunm).offset().left;
 	$("#" + oldID).animate({
 		top: topValue,
 		left: leftValue
 	}, 200, function() {
-		$("#" + oldID).text(diamond.value);
-		var color = diamond.color(diamond.value);
-		$("#" + oldID).css("background-color", color);
-		console.log(oldID + "变成" + diamond.value);
-		if(diamond.mergeTo) {
-			delete diamondListLocal[diamond.row.toString() + diamond.colunm.toString()];
-			$("#" + oldID).remove();
-			console.log("移除：" + oldID);
-		} else {
-			$("#" + oldID).attr("id", newID);
-			console.log(oldID + "变成" + newID);
-		}
-		if(diamond.merged) {
-			//合并动画
-			flash("#" + newID, 3, 10, 50);
-		}
 		callback();
 	});
+}
+
+function uiColorRefresh(diamond) {
+	var oldID = "diamond" + diamond.lastRow + diamond.lastColunm;
+	var newID = "diamond" + diamond.row + diamond.colunm;
+
+	$("#" + oldID).text(diamond.value);
+	var color = diamond.color(diamond.value);
+	$("#" + oldID).css("background-color", color);
+	console.log(oldID + "变成" + diamond.value);
+	if(diamond.mergeTo) {
+		delete diamondListLocal[diamond.row.toString() + diamond.colunm.toString()];
+		$("#" + oldID).remove();
+		console.log("移除：" + oldID);
+	} else {
+		$("#" + oldID).attr("id", newID);
+		console.log(oldID + "变成" + newID);
+	}
+	if(diamond.merged) {
+		//合并动画
+		flash("#" + newID, 3, 10, 50);
+	}
 }
 
 function flash(obj, time, wh, fx) {
