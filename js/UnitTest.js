@@ -1,17 +1,28 @@
 //首先构造原始数据
 var diamond1 = new Diamond(1, 0, 2);
+var diamond00 = new Diamond(0,0,2);
 var diamond12 = new Diamond(1, 2, 2);
 var diamond30 = new Diamond(3, 0, 2);
 var diamond10 = new Diamond(1, 0, 2);
 var diamond11 = new Diamond(1, 1, 2);
 var diamond23 = new Diamond(2, 3, 2);
+var diamond01 = new Diamond(0,1,2);
+var diamond13 = new Diamond(1,3,2);
+var diamond31 = new Diamond(3,1,2);
+var diamond33 = new Diamond(3,3,2);
 
 var diamond234 = new Diamond(2, 3, 4);
 var diamond134 = new Diamond(1, 3, 4);
+var diamond034 = new Diamond(0,3,4);
+var diamond214 = new Diamond(2,1,4);
+var diamond124 = new Diamond(1,2,4);
 
 var diamond338 = new Diamond(3, 3, 8);
 var diamond038 = new Diamond(0,3,8);
 var diamond138 = new Diamond(1,3,8);
+
+var diamond2316 = new Diamond(2,3,16);
+var diamond0216 = new Diamond(0,2,16);
 
 var diamondListTest = {
 	"30": diamond30,
@@ -28,13 +39,35 @@ var diamondListTest2 = {
 	"23":diamond234
 }
 
+var diamondListTest3 = {
+	"01":diamond01,
+	"02":diamond0216,
+	"03":diamond034,
+	"13":diamond13,
+	"21":diamond214,
+	"23":diamond2316
+}
+
+var diamondListTest4 = {
+	"30" : diamond30,
+	"31" : diamond31,
+	"33" : diamond33
+}
+
+var diamondListTest5 = {
+	"00":diamond00,
+	"01":diamond01,
+	"03":diamond034,
+	"12":diamond124
+}
+
 function test() {
-	testMerge(diamondListTest2);
+	testMerge(diamondListTest5);
 }
 
 function testMerge (diamondListParam) {
 	testUIRefresh(diamondListParam,function () {});
-	moveDiamonds(SwipeDirection.SwipeDown,diamondListParam,function () {
+	moveDiamonds(SwipeDirection.SwipeLeft,diamondListParam,function () {
 		console.log("移动完成");
 	});
 }
