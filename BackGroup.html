@@ -135,16 +135,20 @@
 						SwipeDown: 3
 					}
 				}
-
+				var complete = true;
 				function debugClick(dirction) {
 					//返回功能之记录当前数据
+					if(complete){
+						complete = false;
 					record(diamondList);
 					moveDiamonds(dirction, diamondList, function() {
 						console.log("回调执行");
 						initRound();
+						complete = true;
 					});
 //					test();
 					console.log(event.type);
+					}
 				}
 
 				function refreshCopyTable() {
