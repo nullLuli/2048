@@ -82,7 +82,7 @@ function testMoveAndGen() {
 	};
 
 	testUIRefresh(diamondListTest, function() {});
-	moveDiamonds(SwipeDirection.SwipeDown, diamondListTest, function() {
+	moveDiamonds(SwipeDirection.SwipeDown, diamondListTest, function(isMoved) {
 		console.log("移动完成");
 		setTimeout(function() {
 			generateDiv(diamond11);

@@ -104,7 +104,11 @@
 						};
 						$(document).on("pagecreate", function() {
 							initTable();
+							setTimeout(function () {
+								initRound();
+							}, 0);
 						});
+						
 					</script>
 				</div>
 				<div id="back" class="back">
@@ -141,9 +145,12 @@
 					if(complete){
 						complete = false;
 					record(diamondList);
-					moveDiamonds(dirction, diamondList, function() {
+					moveDiamonds(dirction, diamondList, function(isMoved) {
 						console.log("回调执行");
-						initRound();
+						if(isMoved)
+						{
+							initRound();
+						}
 						complete = true;
 					});
 //					test();

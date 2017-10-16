@@ -17,6 +17,7 @@ function moveDiamonds(dirction, diamondListPara, callback) {
 	}
 
 	//遍历现在的方块，往滑动方向移动
+	var isMoved = false;
 	var continueMove = true;
 	while(continueMove) {
 		continueMove = false;
@@ -70,12 +71,15 @@ function moveDiamonds(dirction, diamondListPara, callback) {
 				}
 				break;
 		}
+		if (continueMove) {
+			isMoved = true;
+		}
 	}
 
-	refreshDataToUI(diamondListLocal, diamondTempList, dirction, callback);
+	refreshDataToUI(diamondListLocal, diamondTempList, dirction, callback, isMoved);
 }
 
-function refreshDataToUI(diamondListParam, diamondTempListParam, dirction, callback) {
+function refreshDataToUI(diamondListParam, diamondTempListParam, dirction, callback, isMoved) {
 	var length = countDiamondList(diamondListParam);
 	length += countDiamondList(diamondTempListParam);
 	if(length > 0) {
@@ -136,7 +140,7 @@ function refreshDataToUI(diamondListParam, diamondTempListParam, dirction, callb
 						break;
 				}
 
-				callback();
+				callback(isMoved);
 			}
 		}
 		for(var key in diamondListParam) {
@@ -155,7 +159,7 @@ function refreshDataToUI(diamondListParam, diamondTempListParam, dirction, callb
 		}
 
 	} else {
-		callback();
+		callback(isMoved);
 	}
 }
 
