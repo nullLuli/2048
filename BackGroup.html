@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="js/MoveDiamond.js"></script>
 		<script type="text/javascript" src="js/UnitTest.js"></script>
 		<script type="text/javascript" src="js/BackFunction.js"></script>
+		<script type="text/javascript" src="js/Feature.js"></script>
 		<title></title>
 		<style type="text/css">
 			.backGroud {
@@ -58,10 +59,10 @@
 				color: grey;
 				font-size: 500%;
 				text-align: center;
-				line-height:18vw;
+				line-height: 18vw;
 			}
 			
-			.back{
+			.back {
 				position: absolute;
 				height: 4vw;
 				width: 18vw;
@@ -70,7 +71,7 @@
 				background-color: goldenrod;
 				font-size: 100%;
 				text-align: center;
-				line-height:4vw;
+				line-height: 4vw;
 			}
 		</style>
 	</head>
@@ -104,17 +105,16 @@
 						};
 						$(document).on("pagecreate", function() {
 							initTable();
-							setTimeout(function () {
+							setTimeout(function() {
 								initRound();
 							}, 0);
 						});
-						
 					</script>
 				</div>
 				<div id="back" class="back">
 					后退一步
 					<script type="text/javascript">
-						$("#back").click(function(){
+						$("#back").click(function() {
 							//取出数据
 							diamondList = lastData();
 							//清除界面
@@ -140,21 +140,29 @@
 					}
 				}
 				var complete = true;
+
 				function debugClick(dirction) {
 					//返回功能之记录当前数据
-					if(complete){
+					if(complete) {
 						complete = false;
-					record(diamondList);
-					moveDiamonds(dirction, diamondList, function(isMoved) {
-						console.log("回调执行");
-						if(isMoved)
-						{
-							initRound();
-						}
-						complete = true;
-					});
-//					test();
-					console.log(event.type);
+						record(diamondList);
+						moveDiamonds(dirction, diamondList, function(isMoved) {
+							console.log("回调执行");
+							setTimeout(function() {
+								//检查是否成功出现2048
+								var ifWin = checkIfWin(diamondList);
+								if(ifWin) {
+									alert("你赢啦");
+								} else {
+									if(isMoved) {
+										initRound();
+									}
+								}
+								complete = true;
+							},0);
+						});
+						//					test();
+						console.log(event.type);
 					}
 				}
 
