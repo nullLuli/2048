@@ -1,108 +1,254 @@
 <!DOCTYPE html>
-<html style="width: 100%;height: 100%;">
+<html>
 
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<title>李璐的第一个js demo</title>
-		<!--<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
-		<style>
-			.diamond {
-				background-color: black;
-				color: white;
+		<meta charset="UTF-8">
+		<!--<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>-->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+		<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+		<script type="text/javascript" src="js/Diamond.js"></script>
+		<script type="text/javascript" src="js/MoveDiamond.js"></script>
+		<script type="text/javascript" src="js/UnitTest.js"></script>
+		<script type="text/javascript" src="js/BackFunction.js"></script>
+		<script type="text/javascript" src="js/Feature.js"></script>
+		<title></title>
+		<style type="text/css">
+			.backGroud {
+				background-color: darkgrey;
 				position: absolute;
-				left: 100px;
-				top: 100px;
-				width: 50px;
-				height: 50px;
+				height: 82vw;
+				width: 82%;
+				left: 10%;
+				top: 30vw;
+				border-radius: 2vw;
+			}
+			
+			.backGroudCopy {
+				background-color: grey;
+				position: relative;
+				height: 200px;
+				width: 200px;
+				margin-left: 250px;
+				margin-top: 250px;
+				border-radius: 10px;
+			}
+			
+			.tableRow {
+				position: absolute;
+				height: 18vw;
+				width: 100%;
+				background-color: darkgrey;
+				/*margin-top: 2vw;*/
+				/*margin-bottom: 2vw;*/
+			}
+			
+			.grid {
+				position: absolute;
+				background-color: lightgrey;
+				border-radius: 2vw;
+				width: 18vw;
+				height: 18vw;
+			}
+			
+			.diamond {
+				position: absolute;
+				height: 18vw;
+				width: 18vw;
+				border-radius: 2vw;
+				color: grey;
+				font-size: 500%;
+				text-align: center;
+				line-height: 18vw;
+			}
+			
+			.back {
+				position: absolute;
+				height: 4vw;
+				width: 18vw;
+				top: 25vw;
+				left: 10%;
+				background-color: goldenrod;
+				font-size: 100%;
+				text-align: center;
+				line-height: 4vw;
+			}
+			
+			.winCircle {
+				position: absolute;
+				height: 36vw;
+				width: 36vw;
+				border-radius: 18vw;
+				background-color: red;
 			}
 		</style>
 	</head>
 
-	<body style="height: 100%;margin:0;padding:0">
-		<div id="canvas" style="position: relative;width:100%;height: 100%;background-color: darkgrey;">
-			<div class="diamond" id="diamondID">
-				<p>hhhhhh</p>
+	<body id="body" style="height: 100%">
+		<div data-role="page" id="page" style="height: 100%">
+			<div data-role='content' id="content" style="height:100%">
+				<div id="table" class="backGroud">
+					<script type="text/javascript">
+						var gridMargin = 0;
+						var initTable = function() {
+							console.log("初始化table")
+							for(var i = 0; i < 4; i++) {
+								var createTrString = $("<div>").attr("id", "tr" + i);
+								$("#table").append(createTrString);
+								$("#tr" + i).attr("class", "tableRow");
+								var topValue = i * ($(".tableRow").height() * 1.1) + $(".tableRow").height() * 0.1;
+								$("#tr" + i).offset({
+									top: topValue
+								});
+								for(var j = 0; j < 4; j++) {
+									var createTdString = $("<div>").attr("id", "td" + i + j);
+									$("#tr" + i).append(createTdString);
+									$("#td" + i + j).attr("class", "grid");
+									var leftValue = j * $(".grid").height() * 1.1 + $(".grid").height() * 0.1;
+									$("#td" + i + j).offset({
+										left: leftValue
+									});
+								}
+							}
+						};
+						$(document).on("pagecreate", function() {
+							initTable();
+							setTimeout(function() {
+								initRound();
+								initRound();
+							}, 0);
+						});
+					</script>
+				</div>
+				<div id="back" class="back">
+					后退一步
+					<script type="text/javascript">
+						$("#back").click(function() {
+							//取出数据
+							diamondList = lastData();
+							//清除界面
+							clearUI();
+							//生成
+							generateDiamondFromList(diamondList);
+						});
+					</script>
+				</div>
 			</div>
-			<p id="explainTextID"></p>
+
+			<script>
+				var beginX, beginY, endX, endY, swipeLeft, swipeRight, swipeUp, swipeDown, range = 30;
+				var haveIdentified = false;
+				var page = 0;
+
+				if(typeof SwipeDirection == "undefined") {
+					var SwipeDirection = {
+						SwipeLeft: 0,
+						SwipeRight: 1,
+						SwipeUp: 2,
+						SwipeDown: 3
+					}
+				}
+				var complete = true;
+
+				function debugClick(dirction) {
+					//返回功能之记录当前数据
+					if(complete) {
+						complete = false;
+						record(diamondList);
+						moveDiamonds(dirction, diamondList, function(isMoved) {
+							console.log("回调执行");
+							setTimeout(function() {
+								//检查是否成功出现2048
+								var ifWin = checkIfWin(diamondList);
+								if(ifWin) {
+									alert("你赢啦");
+								} else {
+									if(isMoved) {
+										initRound();
+									}
+								}
+								complete = true;
+							},0);
+						});
+						//					test();
+						console.log(event.type);
+					}
+				}
+
+				function refreshCopyTable() {
+					//先清空
+					var count = 0;
+					$("div[id^='copydiamond']").each(function() {
+						$(this).remove();
+						count++;
+					});
+					console.log("查找到 " + count + "个对象");
+					//然后生成
+					for(var i in diamondList) {
+						var diamond = diamondList[i];
+						generateCopyDiv(diamond);
+					}
+				}
+
+				document.getElementById("page").addEventListener('touchstart', function(event) {
+					event.stopPropagation();
+					//event.preventDefault();
+					beginX = event.targetTouches[0].screenX;
+					beginY = event.targetTouches[0].screenY;
+					swipeLeft = false, swipeRight = false;
+					swipeDown = false, swipeUp = false;
+					haveIdentified = false;
+				});
+
+				document.getElementById("page").addEventListener('touchmove', function(event) {
+					event.stopPropagation();
+					event.preventDefault();
+					if(!haveIdentified) {
+						endX = event.targetTouches[0].screenX;
+						endY = event.targetTouches[0].screenY;
+						// 左右滑动
+						if(Math.abs(endX - beginX) - Math.abs(endY - beginY) > 0) {
+							/*向右滑动*/
+							if(endX - beginX > range) {
+								swipeRight = true;
+								swipeLeft = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeRight);
+							} else if(beginX - endX > range) {
+								/*向左滑动*/
+								swipeLeft = true;
+								swipeRight = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeLeft);
+							}
+						} else if(Math.abs(endX - beginX) - Math.abs(endY - beginY) < 0) {
+							// 上下滑动
+							if(endY - beginY > range) {
+								swipeDown = true;
+								swipeUp = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeDown);
+							} else if(beginY - endY > range) {
+								swipeUp = true;
+								swipeDown = false;
+								haveIdentified = true;
+								debugClick(SwipeDirection.SwipeUp);
+							}
+						}
+					}
+
+				});
+				document.getElementById("page").addEventListener('touchend', function(event) {
+					event.stopPropagation();
+					//event.preventDefault();
+				});
+
+				function eventFunction(stirng) {
+					alert(stirng);
+				}
+			</script>
+
 		</div>
-		<script id="followTouch" type="text/javascript">
-			var startX = 0,
-				startY = 0;
-			var explainTextObj = document.getElementById("explainTextID");
-			var diamondObj = document.getElementById("diamondID");
-			var canvasObj = document.getElementById("canvas");
-			var gettype = Object.prototype.toString;
-
-			function touchBegin(event) {
-				event.preventDefault();
-				startX = parseInt(diamondObj.style.left);
-				startY = parseInt(diamondObj.style.top);
-				if (isNaN(startX)) {
-					startX = 0;
-				}
-				if (isNaN(startY)) {
-					startY = 0;
-				}
-				console.log("起始点：" + startX + ' ' + startY);
-			}
-
-			function touchMove(event) {
-				event.preventDefault();
-				var touch = event.touches[0];
-				var x = startX + touch.pageX;
-				var y = startY + touch.pageY;
-				diamondObj.style.top = toString(y) + "px";
-				diamondObj.style.left = toString(x) + "px";
-				console.log("移动点：" + x + " " + y + ":" + diamondObj.style.x + " " + diamondObj.style.y);
-				//				diamondObj.style.webkitTransform = 'translate(' + x + 'px, ' + y + 'px)';
-				//				explainTextObj.innerHTML = ";" + x + " " + y + "=" + startX + " " + startY + "+" + touch.pageX + " " + touch.pageY;
-			}
-
-			function touchEnd(event) {
-				//				var trans = diamondObj.style.webkitTransform;
-				//				diamondObj.style.webkitTransform = 'translate(0,0)';
-				//				diamondObj.style.position = "absolute";
-				//				var transX = getTransX(trans);
-				//				diamondObj.style.left = transX;
-				//				var transY = getTransY(trans);
-				//				diamondObj.style.top = transY;
-				//				explainTextObj.innerHTML = ";" + transX + " " + transY;
-			}
-
-			function getTransX(trans) {
-				var stringArray = trans.split(",");
-				var fristStringOfTrans = stringArray[0];
-				var transX = fristStringOfTrans.substring(10, fristStringOfTrans.length - 2);
-				return parseInt(transX);
-			}
-
-			function getTransY(trans) {
-				var stringArray = trans.split(",");
-				var stringOfTrans = stringArray[1];
-				var transY = stringOfTrans.substring(0, stringOfTrans.length - 3);
-				return parseInt(transY);
-			}
-
-			function click_l() {
-//								console.log("点击:" + diamondObj.style.top + " " + diamondObj.style.left);
-				console.log("diamondObj:" + gettype.call(diamondObj) + "style:" + gettype.call(diamondObj.style) + "top:" + gettype.call(diamondObj.style.top));
-			}
-			diamondObj.addEventListener("touchstart", touchBegin);
-			diamondObj.addEventListener("touchmove", touchMove);
-			diamondObj.addEventListener("touchend", touchEnd);
-			canvasObj.addEventListener("click", click_l);
-		</script>
-
-		<!--<script id="clearExplainText" type="text/javascript">
-			var explainTextObj = document.getElementById("explainTextID");
-			var canvasObj = document.getElementById("canvas");
-			
-			function clearExplainText () {
-				explainTextObj.innerHTML = "";
-			}
-			canvasObj.addEventListener("click",clearExplainText);
-		</script>-->
 	</body>
 
 </html>
